@@ -47,7 +47,7 @@ export const addProductData = async (req, res) => {
 
     try {
         await product.save();
-        return res.status(200).send({ product, message: "Product added successfully" });
+        return res.status(200).send({ product, success : true, message: "Product added successfully" });
     } catch (saveError) {
         return res.status(500).send({ message: 'Error saving product', error: saveError });
     }
