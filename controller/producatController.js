@@ -18,29 +18,31 @@ export const addProductImage = async (req, res) => {
         const imagePath = req.file.path;
         const filename = req.file.filename;
         const originalname = req.file.originalname;
-        console.log(req.file,'testing file');
+        console.log(req.file, 'testing file');
         if (err) {
-            return res.status(500).send({ message: 'Error uploading file', error : err });
+            return res.status(500).send({ message: 'Error uploading file', error: err });
         }
-        else{
-            return res.status(200).send({ message: "Product image uploaded successfully",imagePath: imagePath , filename: filename,originalname : originalname  });
+        else {
+            return res.status(200).send({ message: "Product image uploaded successfully", imagePath: imagePath, filename: filename, originalname: originalname });
         }
     });
 };
 
 
 export const addProductData = async (req, res) => {
-    const { name, description, price, quantity , imagePath  } = req.body;
+    const { name, description, price, quantity, imagePath, filename, originalname } = req.body;
     if (!name || !description || !price || !quantity) {
         return res.status(400).send({ message: "Please provide all details" });
-    }   
+    }
 
     const product = new ProductModel({
         name,
         description,
         price,
         quantity,
-        imagePath  
+        imagePath,
+        filename, 
+        originalname
     });
 
     try {
@@ -51,14 +53,14 @@ export const addProductData = async (req, res) => {
     }
 }
 
-    export const getProductById = async (req, res) => {
-        if (!req.params.id) {
-            return res.status(404).send({ message: "please provide ID" })
-        }
-        const product = await ProductModel.findById(req.params.id);
-        if (!product) return res.status(404).send({ message: 'Product not found.' });
-        return res.status(200).send({ product });
-    };
+export const getProductById = async (req, res) => {
+    if (!req.params.id) {
+        return res.status(404).send({ message: "please provide ID" })
+    }
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) return res.status(404).send({ message: 'Product not found.' });
+    return res.status(200).send({ product });
+};
 
 
 

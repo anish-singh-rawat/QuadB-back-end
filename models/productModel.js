@@ -16,8 +16,9 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  image : String,
-  imagePath: { type: String }
+  filename: { type: String },
+  imagePath: { type: String },
+  originalname: { type: String }
 });
 
 const ProductModel = mongoose.model('Product', ProductSchema);
