@@ -7,13 +7,20 @@ import { connectToMongoDB } from './config.js';
 import router from './routes/AuthRoutes.js';
 import ProductRouter from './routes/ProductRoutes.js';
 import CartRoute from './routes/CartRoute.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 dotenv.config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors());
 app.use(express.json())
-app.use('/public', express.static('public'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// app.use('/public', express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 connectToMongoDB();
