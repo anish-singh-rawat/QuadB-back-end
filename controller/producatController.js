@@ -58,7 +58,7 @@ export const getProductById = async (req, res) => {
         return res.status(404).send({ message: "please provide ID" })
     }
     const product = await ProductModel.findById(req.params.id);
-    if (!product) return res.status(404).send({ message: 'Product not found.' });
+    if (!product) return res.status(404).send({success : true, message: 'Product not found.' });
     return res.status(200).send({ product });
 };
 
@@ -66,7 +66,7 @@ export const getProductById = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
     const products = await ProductModel.find();
-    res.status(200).send(products);
+    res.status(200).send({products, success : true});
 };
 
 
@@ -88,7 +88,7 @@ export const updateProduct = async (req, res) => {
             return res.status(404).send({ message: 'Product not found.' });
         }
 
-        res.status(200).send({ message: "Product updated successfully" });
+        res.status(200).send({success : true, message: "Product updated successfully" });
     } catch (error) {
         res.status(500).send({ message: error });
     }
@@ -101,5 +101,5 @@ export const deleteProduct = async (req, res) => {
     }
     const product = await ProductModel.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).send({ message: 'Product not found.' });
-    return res.status(200).send({ messsage: 'Product deleted successfully' });
+    return res.status(200).send({success : true, messsage: 'Product deleted successfully' });
 };
