@@ -16,11 +16,14 @@ const upload = multer({ storage: storage });
 export const addProductImage = async (req, res) => {
     upload.single('photo')(req, res, async function (err) {
         const imagePath = req.file.path;
+        const filename = req.file.filename;
+        const originalname = req.file.originalname;
+        console.log(req.file,'testing file');
         if (err) {
             return res.status(500).send({ message: 'Error uploading file', error : err });
         }
         else{
-            return res.status(200).send({ message: "Product image uploaded successfully",imagePath: imagePath  });
+            return res.status(200).send({ message: "Product image uploaded successfully",imagePath: imagePath , filename: filename,originalname : originalname  });
         }
     });
 };
