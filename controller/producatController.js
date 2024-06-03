@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 export const addProductImage = async (req, res) => {
     upload.single('photo')(req, res, async function (err) {
-        const imagePath = req.file.path;
+        const imagePath = `https://quadb-back-end-2.onrender.com/${req.file.path}`;
         const filename = req.file.filename;
         const originalname = req.file.originalname;
         console.log(req.file, 'testing file');
