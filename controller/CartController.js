@@ -27,10 +27,14 @@ export const addToCart = async (req, res) => {
         cartItems: [{ productId, price }] 
       });
     } else {
+      const itemdata = await UserCartModel.findOne({ productId })
+      if(itemdata){
+        return res.status(400).send({ message: "item already added" });
+      }
       cart.cartItems.push({ productId, price }); 
+      const savedCart = await cart.save();
+      return res.status(200).send({ message: "Item added successfully", success : true  });
     }
-    const savedCart = await cart.save();
-    return res.status(200).send({ message: "Item added successfully", data: savedCart });
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
