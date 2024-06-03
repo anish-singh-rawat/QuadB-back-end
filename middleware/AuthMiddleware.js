@@ -8,7 +8,7 @@ const authMiddleWare = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).send({ message: "access denied", test : 1 });
+      return res.status(401).send({ message: "access denied" });
     }
 
     const decoded = jwt.verify(token, secret);
@@ -18,11 +18,11 @@ const authMiddleWare = async (req, res, next) => {
       return next();
     }
 
-    return res.status(401).send({ message: "access denied", test : 2 });
+    return res.status(401).send({ message: "access denied" });
 
   } catch (error) {
     console.log(error);
-    return res.status(401).send({ message: "access denied", test : 3 });
+    return res.status(401).send({ message: "access denied" });
   }
 };
 
