@@ -59,7 +59,7 @@ export const addToCart = async (req, res) => {
       if (itemIndex !== -1) {
         return res.status(400).send({ message: "Item already added" });
       }
-      cart.cartItems.push({ productId, price });
+      cart.cartItems.push({ productId, price,  productImage, itemName });
     }
 
     await cart.save();
