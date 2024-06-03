@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 // Register new user
 export const registerUser = async (req, res) => {
-  const { username, email, password, mobile, isAdmin } = req.body;
+  const { username, email, password, mobile } = req.body;
   if (!username || !email, !password || !mobile) {
     return res.status(402).json({ message: "Please provide all data" });
   }
@@ -38,7 +38,7 @@ export const loginUser = async (req, res) => {
       if (!validity) {
         return res.status(401).json({ message: "wrong password" });
       } else {
-        const token = jwt.sign({ admin : user.isAdmin, email: user.email, id: user._id }, process.env.JWTKEY);
+        const token = jwt.sign({  username: user.username, admin : user.isAdmin, email: user.email, id: user._id }, process.env.JWTKEY);
         return res.status(200).json({ user, token, message: "user login successfully", success: true });
       }
     } else {
