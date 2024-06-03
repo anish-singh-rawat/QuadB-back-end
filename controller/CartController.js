@@ -42,8 +42,8 @@ export const getCartItem = async (req, res) => {
 
 
 export const addToCart = async (req, res) => {
-  const { productId, price, userId } = req.body;
-  if (!productId || !price || !userId) {
+  const { productId, price, userId, productImage ,itemName } = req.body;
+  if (!productId || !price || !userId || !productImage || !itemName) {
     return res.status(400).send({ message: "Please provide all required data" });
   }
 
@@ -52,7 +52,7 @@ export const addToCart = async (req, res) => {
     if (!cart) {
       cart = new UserCartModel({
         userId,
-        cartItems: [{ productId, price }],
+        cartItems: [{ productId, price, productImage, itemName }],
       });
     } else {
       const itemIndex = cart.cartItems.findIndex(item => item.productId.toString() === productId);
