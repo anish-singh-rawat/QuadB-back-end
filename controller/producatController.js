@@ -30,8 +30,10 @@ export const addProductImage = async (req, res) => {
 
 export const deleteProductImage = async (req, res) => {
     const filename = req.body.filename;
-    const filePath = path.join('https://quadb-back-end-production.up.railway.app/public', 'images', filename);
+    const filePath = 
+    `https://quadb-back-end-production.up.railway.app/public/images/${filename}`;
     fs.unlink(filePath, (err) => {
+        console.log(err)
         try {
             if (err) {
                 if (err.code === 'ENOENT') {
