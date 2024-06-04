@@ -1,7 +1,7 @@
 import ProductModel from "../models/productModel.js";
 import multer from 'multer';
 import path from 'path';
-
+import fs from 'fs';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -15,8 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 export const addProductImage = async (req, res) => {
     upload.single('photo')(req, res, async function (err) {
-        // const imagePath = `https://quadb-back-end-2.onrender.com/${req.file.path}`;
-       const imagePath = `https://quadb-back-end-production.up.railway.app/${req.file.path}`
+        const imagePath = `https://quadb-back-end-production.up.railway.app/${req.file.path}`
         const filename = req.file.filename;
         const originalname = req.file.originalname;
         console.log(req.file, 'testing file');
@@ -28,6 +27,27 @@ export const addProductImage = async (req, res) => {
         }
     });
 };
+
+export const deleteProductImage = async (req, res) => {
+    const filename = req.body.filename;
+    const filePath = path.join('https://quadb-back-end-production.up.railway.app/public', 'images', filename);
+    fs.unlink(filePath, (err) => {
+        try {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    return res.status(404).send({ message: 'File not found' });
+                }
+                return res.status(500).send({ message: 'Error deleting file', error: err });
+            }
+        return res.status(200).send({ message: 'File deleted successfully', success: true });
+        } catch (error) {
+            return res.status(500).send({ message: error });
+
+        }
+
+    });
+}
+
 
 
 export const addProductData = async (req, res) => {
@@ -42,13 +62,13 @@ export const addProductData = async (req, res) => {
         price,
         quantity,
         imagePath,
-        filename, 
+        filename,
         originalname
     });
 
     try {
         await product.save();
-        return res.status(200).send({ product, success : true, message: "Product added successfully" });
+        return res.status(200).send({ product, success: true, message: "Product added successfully" });
     } catch (saveError) {
         return res.status(500).send({ message: 'Error saving product', error: saveError });
     }
@@ -59,15 +79,13 @@ export const getProductById = async (req, res) => {
         return res.status(404).send({ message: "please provide ID" })
     }
     const product = await ProductModel.findById(req.params.id);
-    if (!product) return res.status(404).send({success : true, message: 'Product not found.' });
+    if (!product) return res.status(404).send({ success: true, message: 'Product not found.' });
     return res.status(200).send({ product });
 };
 
-
-
 export const getAllProducts = async (req, res) => {
     const products = await ProductModel.find();
-    res.status(200).send({products, success : true});
+    res.status(200).send({ products, success: true });
 };
 
 
@@ -89,7 +107,7 @@ export const updateProduct = async (req, res) => {
             return res.status(404).send({ message: 'Product not found.' });
         }
 
-        res.status(200).send({success : true, message: "Product updated successfully" });
+        res.status(200).send({ success: true, message: "Product updated successfully" });
     } catch (error) {
         res.status(500).send({ message: error });
     }
@@ -102,5 +120,5 @@ export const deleteProduct = async (req, res) => {
     }
     const product = await ProductModel.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).send({ message: 'Product not found.' });
-    return res.status(200).send({success : true, messsage: 'Product deleted successfully' });
+    return res.status(200).send({ success: true, messsage: 'Product deleted successfully' });
 };
