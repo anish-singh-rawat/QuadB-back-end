@@ -1,7 +1,6 @@
 import UserModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import Cookies from "js-cookie"
 
 // Register new user
 export const registerUser = async (req, res) => {
@@ -20,7 +19,6 @@ export const registerUser = async (req, res) => {
     }
     const user = await newUser.save();
     const token = jwt.sign({ email: user.email, admin : user.isAdmin, username: user.username, id: user._id }, process.env.JWTKEY);
-    Cookies.set('token', token)
     return res.status(200).json({ user, token, message: "user register successfully", success: true });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -41,7 +39,6 @@ export const loginUser = async (req, res) => {
         return res.status(401).json({ message: "wrong password" });
       } else {
         const token = jwt.sign({  username: user.username, admin : user.isAdmin, email: user.email, id: user._id }, process.env.JWTKEY);
-        Cookies.set('token', token)
         return res.status(200).json({ user, token, message: "user login successfully", success: true });
       }
     } else {

@@ -1,7 +1,6 @@
 import ProductModel from "../models/productModel.js";
 import multer from 'multer';
 import path from 'path';
-import axios from 'axios';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
