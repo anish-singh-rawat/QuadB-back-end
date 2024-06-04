@@ -1,7 +1,7 @@
 import ProductModel from "../models/productModel.js";
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
+import axios from 'axios';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,27 +28,25 @@ export const addProductImage = async (req, res) => {
     });
 };
 
+
 export const deleteProductImage = async (req, res) => {
     const filename = req.body.filename;
-    const filePath = 
-    `https://quadb-back-end-production.up.railway.app/public/images/${filename}`;
-    fs.unlink(filePath, (err) => {
-        console.log(err)
-        try {
-            if (err) {
-                if (err.code === 'ENOENT') {
-                    return res.status(404).send({ message: 'File not found' });
-                }
-                return res.status(500).send({ message: 'Error deleting file', error: err });
-            }
-        return res.status(200).send({ message: 'File deleted successfully', success: true });
-        } catch (error) {
-            return res.status(500).send({ message: error });
-
+  const fileUrl = `https://quadb-back-end-production.up.railway.app/public/images/${filename}`;
+    try {
+        const response = await axios.delete(fileUrl);
+        if (response.status === 200) {
+            return res.status(200).send({ message: 'File deleted successfully', success: true });
+        } else {
+            return res.status(response.status).send({ message: 'Error deleting file', error: response.data });
         }
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            return res.status(404).send({ message: 'File not found' });
+        }
+        return res.status(500).send({ message: 'Error deleting file', error: error.message });
+    }
+};
 
-    });
-}
 
 export const addProductData = async (req, res) => {
     const { name, description, price, quantity, imagePath, filename, originalname } = req.body;
