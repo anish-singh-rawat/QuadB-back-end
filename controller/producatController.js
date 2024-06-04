@@ -41,7 +41,7 @@ export const deleteProductImage = async (req, res) => {
         }
     } catch (error) {
         if (error.response && error.response.status === 404) {
-            return res.status(404).send({ message: 'File not found' });
+            return res.status(404).send({ message: 'File not found' , error});
         }
         return res.status(500).send({ message: 'Error deleting file', error: error.message });
     }
