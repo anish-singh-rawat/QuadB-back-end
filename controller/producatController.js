@@ -48,8 +48,6 @@ export const deleteProductImage = async (req, res) => {
     });
 }
 
-
-
 export const addProductData = async (req, res) => {
     const { name, description, price, quantity, imagePath, filename, originalname } = req.body;
     if (!name || !description || !price || !quantity) {
@@ -88,7 +86,6 @@ export const getAllProducts = async (req, res) => {
     res.status(200).send({ products, success: true });
 };
 
-
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
@@ -120,5 +117,5 @@ export const deleteProduct = async (req, res) => {
     }
     const product = await ProductModel.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).send({ message: 'Product not found.' });
-    return res.status(200).send({ success: true, messsage: 'Product deleted successfully' });
+    return res.status(200).send({ success: true, messsage: 'Product deleted successfully', product });
 };
