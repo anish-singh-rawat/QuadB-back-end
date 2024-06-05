@@ -7,6 +7,7 @@ import { connectToMongoDB } from './config.js';
 import router from './routes/AuthRoutes.js';
 import ProductRouter from './routes/ProductRoutes.js';
 import CartRoute from './routes/CartRoute.js';
+import OrderRoute from './routes/OrderRoute.js';
 
 
 dotenv.config()
@@ -30,5 +31,6 @@ app.listen(process.env.PORT, () => {
 app.use('/auth', router);
 app.use('/product', ProductRouter);
 app.use('/cart', CartRoute);
+app.use('/order', OrderRoute);
 
 
