@@ -14,33 +14,6 @@ export const getCartItem = async (req, res) => {
   }
 };
 
-// export const addToCart = async (req, res) => {
-//   const { productId, price, userId } = req.body;
-//   if (!productId || !price || !userId) {
-//     return res.status(400).send({ message: "Please provide all required data" });
-//   }
-//   try {
-//     let cart = await UserCartModel.findOne({ userId });
-//     if (!cart) {
-//       cart = new UserCartModel({
-//         userId,
-//         cartItems: [{ productId, price }] 
-//       });
-//     } else {
-//       const itemdata = await UserCartModel.findOne({ productId })
-//       if(itemdata){
-//         return res.status(400).send({ message: "item already added" });
-//       }
-//       cart.cartItems.push({ productId, price }); 
-//       await cart.save();
-//       return res.status(200).send({ message: "Item added successfully", success : true  });
-//     }
-//   } catch (error) {
-//     return res.status(500).send({ error: error.message });
-//   }
-// };
-
-
 export const addToCart = async (req, res) => {
   const { productId, price, userId, productImage ,itemName } = req.body;
   if (!productId || !price || !userId || !productImage || !itemName) {
