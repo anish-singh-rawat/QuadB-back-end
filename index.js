@@ -51,10 +51,11 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: `${process.env.API_URL}`,
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 app.use(express.json());
 app.use('/public', express.static('public'));
