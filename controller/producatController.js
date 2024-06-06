@@ -1,6 +1,9 @@
 import ProductModel from "../models/productModel.js";
 import multer from 'multer';
 import path from 'path';
+import dotenv from "dotenv";
+dotenv.config()
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -14,10 +17,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 export const addProductImage = async (req, res) => {
     upload.single('photo')(req, res, async function (err) {
-        const imagePath = `https://quadb-back-end-production.up.railway.app/${req.file.path}`
+        const imagePath = `${process.env.API_URL}${req.file.path}`
         const filename = req.file.filename;
         const originalname = req.file.originalname;
-        console.log(req.file, 'testing file');
         if (err) {
             return res.status(500).send({ message: 'Error uploading file', error: err });
         }
