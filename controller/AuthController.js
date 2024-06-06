@@ -2,7 +2,6 @@ import UserModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// Register new user
 export const registerUser = async (req, res) => {
   const { username, email, password, mobile } = req.body;
   if (!username || !email, !password || !mobile) {

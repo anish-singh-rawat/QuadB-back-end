@@ -110,7 +110,7 @@ export const deleteProduct = async (req, res) => {
     if (!req.params.id) {
         return res.status(404).send({ message: "please provide ID" })
     }
-    if (!mongoose.Types.ObjectId.isValid(!req.params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(400).send({ message: 'Invalid Id.' });
     }
     try {
