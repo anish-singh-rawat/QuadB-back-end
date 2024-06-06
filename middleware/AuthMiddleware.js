@@ -11,14 +11,17 @@ const authMiddleWare = async (req, res, next) => {
       return res.status(401).send({ message: "access denied" });
     }
 
-    const decoded = jwt.verify(token, secret);
-    req.body._id = decoded?.id;
+    try {
+      const decoded = jwt.verify(token, secret);
+      req.body._id = decoded?.id;
 
-    if (req.body._id === decoded?.id) {
-      return next();
+      if (req.body._id === decoded?.id) {
+        return next();
+      }
+      return res.status(401).send({ message: "Access denied: Invalid token" });
+    } catch (err) {
+      return res.status(401).send({ message: "Access denied: Invalid token" });
     }
-
-    return res.status(401).send({ message: "access denied" });
 
   } catch (error) {
     console.log(error);

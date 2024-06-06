@@ -1,23 +1,39 @@
 import { UserCartModel } from "../models/CartModel.js";
+import mongoose from "mongoose";
 
 export const getCartItem = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!id) return res.status(404).send({ message: 'User Id not found.' });
+    
+    if (!id) {
+      return res.status(404).send({ message: 'User Id not found.' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).send({ message: 'Invalid User Id.' });
+    }
 
     const cart = await UserCartModel.findOne({ userId: id });
-    if (!cart) return res.status(404).send({ message: 'no data found.' });
+    if (!cart) {
+      return res.status(404).send({ message: 'No data found.' });
+    }
 
-    res.status(200).send({ message: 'Cart found successfully', cart });
+    return res.status(200).send({ message: 'Cart found successfully', cart });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message });
   }
 };
+
 
 export const addToCart = async (req, res) => {
   const { productId, price, userId, productImage ,itemName } = req.body;
   if (!productId || !price || !userId || !productImage || !itemName) {
     return res.status(400).send({ message: "Please provide all required data" });
+  }
+
+  
+  if(!mongoose.Types.ObjectId.isValid(productId) || !mongoose.Types.ObjectId.isValid(userId)){
+    return res.status(400).send({ message: 'Invalid Id.' });
   }
 
   try {
@@ -49,6 +65,10 @@ export const deleteCartItem = async (req, res) => {
     if (!userId || !productId) {
       return res.status(400).send({ message: 'Please provide userId and productId.' });
     }
+
+   if(!mongoose.Types.ObjectId.isValid(productId) || !mongoose.Types.ObjectId.isValid(userId)){
+      return res.status(400).send({ message: 'Invalid Id.' });
+    }
     
     try {
       let cart = await UserCartModel.findOne({ userId });
@@ -64,9 +84,9 @@ export const deleteCartItem = async (req, res) => {
       cart.cartItems.splice(itemIndex, 1);
   
       const updatedCart = await cart.save();
-      res.status(200).send({ message: 'Item removed successfully', cart: updatedCart });
+    return  res.status(200).send({ message: 'Item removed successfully', cart: updatedCart });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+     return res.status(500).send({ error: error.message });
     }
   };
   

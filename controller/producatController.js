@@ -2,6 +2,8 @@ import ProductModel from "../models/productModel.js";
 import multer from 'multer';
 import path from 'path';
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+
 dotenv.config()
 
 const storage = multer.diskStorage({
@@ -29,7 +31,7 @@ export const addProductImage = async (req, res) => {
 };
 
 export const addProductData = async (req, res) => {
-    const { name, description, price, quantity, imagePath, filename, originalname , category ,brand} = req.body;
+    const { name, description, price, quantity, imagePath, filename, originalname, category, brand } = req.body;
     if (!name || !description || !price || !quantity || !brand || !category || !imagePath) {
         return res.status(400).send({ message: "Please provide all details" });
     }
@@ -58,9 +60,17 @@ export const getProductById = async (req, res) => {
     if (!req.params.id) {
         return res.status(404).send({ message: "please provide ID" })
     }
-    const product = await ProductModel.findById(req.params.id);
-    if (!product) return res.status(404).send({ success: true, message: 'Product not found.' });
-    return res.status(200).send({ product });
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).send({ message: 'Invalid Id.' });
+    }
+    try {
+        const product = await ProductModel.findById(req.params.id);
+        if (!product) return res.status(404).send({ success: true, message: 'Product not found.' });
+        return res.status(200).send({ product });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+
 };
 
 export const getAllProducts = async (req, res) => {
@@ -71,14 +81,17 @@ export const getAllProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
+        const { name, description, price, quantity, category, brand } = req.body;
         if (!id) {
             return res.status(400).send({ message: "Please provide an ID" });
         }
-        const { name, description, price, quantity, category, brand } = req.body;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: 'Invalid Id.' });
+        }
 
         const product = await ProductModel.findByIdAndUpdate(
             id,
-            { name, description, price, quantity, brand , category },
+            { name, description, price, quantity, brand, category },
             { new: true, runValidators: true }
         );
 
@@ -97,7 +110,14 @@ export const deleteProduct = async (req, res) => {
     if (!req.params.id) {
         return res.status(404).send({ message: "please provide ID" })
     }
-    const product = await ProductModel.findByIdAndDelete(req.params.id);
-    if (!product) return res.status(404).send({ message: 'Product not found.' });
-    return res.status(200).send({ success: true, messsage: 'Product deleted successfully', product });
+    if (!mongoose.Types.ObjectId.isValid(!req.params.id)) {
+        return res.status(400).send({ message: 'Invalid Id.' });
+    }
+    try {
+        const product = await ProductModel.findByIdAndDelete(req.params.id);
+        if (!product) return res.status(404).send({ message: 'Product not found.' });
+        return res.status(200).send({ success: true, messsage: 'Product deleted successfully', product });
+    } catch (error) {
+        return res.status(500).send({ message: error.message })
+    }
 };

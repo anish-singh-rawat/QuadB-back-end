@@ -11,14 +11,17 @@ const productMiddleWare = async (req, res, next) => {
       return res.status(401).send({ message: "access denied" });
     }
 
-    const decoded = jwt.verify(token, secret);
-    req.body._id = decoded?.id;
+    try {
+      const decoded = jwt.verify(token, secret);
+      req.body._id = decoded?.id;
 
-    if (req.body._id === decoded?.id && decoded.admin === true) {
-      return next();
-    }
-    else{
-        return res.status(401).send({ message: "access denied" });
+      if (req.body._id === decoded?.id && decoded.admin === true) {
+        return next();
+      } else {
+        return res.status(403).send({ message: "Access denied: Insufficient permissions" });
+      }
+    } catch (err) {
+      return res.status(401).send({ message: "Access denied: Invalid token" });
     }
   } catch (error) {
     console.log(error);

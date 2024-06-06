@@ -1,4 +1,5 @@
 import { OrderModel } from "../models/OrderModal.js";
+import mongoose from "mongoose";
 
 
 export const placeOrderController = async (req, res) => {
@@ -6,6 +7,10 @@ export const placeOrderController = async (req, res) => {
     console.log(req.body)
     if (!ProductId || !firstName || !userId || !lastName || !StreetAddress || !City || !CountryOrRegion || !PhoneNumber || !EmailAddress) {
         return res.status(400).send({ message: "Please provide all required data" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(ProductId) || !mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).send({ message: 'Invalid Id.' });
     }
 
     try {
