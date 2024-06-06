@@ -4,7 +4,6 @@ import path from 'path';
 import dotenv from "dotenv";
 dotenv.config()
 
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/images');
@@ -30,8 +29,8 @@ export const addProductImage = async (req, res) => {
 };
 
 export const addProductData = async (req, res) => {
-    const { name, description, price, quantity, imagePath, filename, originalname } = req.body;
-    if (!name || !description || !price || !quantity) {
+    const { name, description, price, quantity, imagePath, filename, originalname , category ,brand} = req.body;
+    if (!name || !description || !price || !quantity || !brand || !category || !imagePath) {
         return res.status(400).send({ message: "Please provide all details" });
     }
 
@@ -42,7 +41,9 @@ export const addProductData = async (req, res) => {
         quantity,
         imagePath,
         filename,
-        originalname
+        originalname,
+        category,
+        brand
     });
 
     try {
@@ -73,11 +74,11 @@ export const updateProduct = async (req, res) => {
         if (!id) {
             return res.status(400).send({ message: "Please provide an ID" });
         }
-        const { name, description, price, quantity } = req.body;
+        const { name, description, price, quantity, category, brand } = req.body;
 
         const product = await ProductModel.findByIdAndUpdate(
             id,
-            { name, description, price, quantity },
+            { name, description, price, quantity, brand , category },
             { new: true, runValidators: true }
         );
 

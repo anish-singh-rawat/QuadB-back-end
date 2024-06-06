@@ -16,6 +16,14 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  brand: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
+  },
   filename: { type: String },
   imagePath: { type: String },
   originalname: { type: String }
